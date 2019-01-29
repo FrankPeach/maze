@@ -159,17 +159,17 @@
     </Compile>
     <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Models\MazeSolution.cs" />
-    <Compile Include="Models\Paths.cs" />
-    <Compile Include="Models\Path.cs" />
+    <Compile Include="Services\ServiceHelpers\Paths.cs" />
+    <Compile Include="Services\ServiceHelpers\Path.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Extension.cs" />
     <Compile Include="Services\ISolveMazeService.cs" />
     <Compile Include="Services\MazeCharacters.cs" />
-    <Compile Include="Services\IMoveDirection.cs" />
-    <Compile Include="Services\MoveDown.cs" />
-    <Compile Include="Services\MoveUp.cs" />
-    <Compile Include="Services\MoveRight.cs" />
-    <Compile Include="Services\MoveLeft.cs" />
+    <Compile Include="Services\MazeDirections\IMoveDirection.cs" />
+    <Compile Include="Services\MazeDirections\MoveDown.cs" />
+    <Compile Include="Services\MazeDirections\MoveUp.cs" />
+    <Compile Include="Services\MazeDirections\MoveRight.cs" />
+    <Compile Include="Services\MazeDirections\MoveLeft.cs" />
     <Compile Include="Services\SolveMazeService.cs" />
   </ItemGroup>
   <ItemGroup>

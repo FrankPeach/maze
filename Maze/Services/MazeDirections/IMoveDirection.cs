@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Maze.Services
+namespace Maze.Services.MazeDirections
 {
     using Maze.Models;
 

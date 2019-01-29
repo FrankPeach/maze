@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MoveUp.cs" company="Peach Consulting, Inc">
+// <copyright file="MoveRight.cs" company="Peach Consulting, Inc">
 //   Copyright © 2019 Peach Consulting, Inc. All rights reserved
 // </copyright>
 // <summary>
@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Maze.Services
+namespace Maze.Services.MazeDirections
 {
     using System;
 
@@ -16,20 +16,20 @@ namespace Maze.Services
     /// <summary>
     /// The move left.
     /// </summary>
-    public class MoveUp : IMoveDirection
+    public class MoveRight : IMoveDirection
     {
         /// <inheritdoc />
         public Coordinate Move(string[] mazeArray, Coordinate start)
         {
             try
             {
-                var result = mazeArray[start.y - 1][start.x];
-                if (result == MazeCharacters.Open || result == MazeCharacters.Destination)
+                var result = mazeArray[start.Y][start.X + 1];
+                if ((result == MazeCharacters.Open) || (result == MazeCharacters.Destination))
                 {
                     return new Coordinate()
                            {
-                               x = start.x,
-                               y = start.y - 1
+                               X = start.X + 1,
+                               Y = start.Y
                     };
                 }
             }

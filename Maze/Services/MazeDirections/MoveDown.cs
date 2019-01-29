@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Maze.Services
+namespace Maze.Services.MazeDirections
 {
     using System;
 
@@ -23,13 +23,13 @@ namespace Maze.Services
         {
             try
             {
-                var result = mazeArray[start.y + 1][start.x];
+                var result = mazeArray[start.Y + 1][start.X];
                 if ((result == MazeCharacters.Open) || (result == MazeCharacters.Destination))
                 {
                     return new Coordinate
                            {
-                               x = start.x,
-                               y = start.y + 1
+                               X = start.X,
+                               Y = start.Y + 1
                     };
                 }
             }

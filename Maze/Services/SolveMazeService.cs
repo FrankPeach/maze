@@ -17,6 +17,8 @@ namespace Maze.Services
 
     using Maze.Common;
     using Maze.Models;
+    using Maze.Services.MazeDirections;
+    using Maze.Services.ServiceHelpers;
 
     /// <summary>
     /// The Service to solve the maze puzzle.
@@ -106,8 +108,8 @@ namespace Maze.Services
                 var startIndex = mazeLine.IndexOf(MazeCharacters.Starting);
                 if (startIndex > 0)
                 {
-                    coordinates.y = startIndex;
-                    coordinates.x = lineIndex;
+                    coordinates.Y = startIndex;
+                    coordinates.X = lineIndex;
                     found = true;
                 }
 
@@ -146,9 +148,9 @@ namespace Maze.Services
             for (int i = 0; i < maze.Length; i++)
             {
                 char[] line = maze[i].ToCharArray();
-                foreach (var coordinate in solution.Where(x => x.y == i))
+                foreach (var coordinate in solution.Where(x => x.Y == i))
                 {
-                    line[coordinate.x] = solutionChar;
+                    line[coordinate.X] = solutionChar;
                 }
 
                 solutionString[i] = new string(line);
@@ -176,7 +178,7 @@ namespace Maze.Services
                 paths = new Paths();
                 foreach (var path in newPathList.PathList)
                 {
-                    var pathEndPoint = new Coordinate { x = path.End.x, y = path.End.y };
+                    var pathEndPoint = new Coordinate { X = path.End.X, Y = path.End.Y };
                     var newCoordinates = new List<Coordinate>();
                     foreach (var moveDirection in this.MoveDirections)
                     {
@@ -186,7 +188,7 @@ namespace Maze.Services
                         if (result != null)
                         {
                             // Did we reach the end?
-                            if (maze[result.y][result.x] == MazeCharacters.Destination)
+                            if (maze[result.Y][result.X] == MazeCharacters.Destination)
                             {
                                 // Remove the starting position from the solution
                                 path.Coordinates.RemoveFirst();

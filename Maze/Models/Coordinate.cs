@@ -11,17 +11,28 @@ namespace Maze.Models
 {
     using System;
 
+    /// <summary>The coordinate.</summary>
     public class Coordinate : ICloneable
     {
-        public int x { get; set; }
-        public int y { get; set; }
+        /// <summary>
+        /// Gets or sets the X.
+        /// </summary>
+        public int X { get; set; }
 
+        /// <summary>
+        /// Gets or sets the y.
+        /// </summary>
+        public int Y { get; set; }
+
+        /// <summary>The clone.</summary>
+        /// <returns>The <see cref="object"/>.</returns>
         public object Clone()
         {
             return this.MemberwiseClone();
         }
 
-        public override bool Equals(System.Object obj)
+        /// <inheritdoc />
+        public override bool Equals(object obj)
         {
             if (obj == null)
             {
@@ -29,31 +40,35 @@ namespace Maze.Models
             }
 
             // If parameter cannot be cast to Point return false.
-            Coordinate p = obj as Coordinate;
-            if ((System.Object)p == null)
+            var coordinate = obj as Coordinate;
+            if (coordinate == null)
             {
                 return false;
             }
 
             // Return true if the fields match:
-            return (x == p.x) && (y == p.y);
+            return (this.X == coordinate.X) && (this.Y == coordinate.Y);
         }
 
-        public bool Equals(Coordinate p)
+        /// <summary>The equals.</summary>
+        /// <param name="coordinate">The p.</param>
+        /// <returns>The <see cref="bool"/>.</returns>
+        public bool Equals(Coordinate coordinate)
         {
             // If parameter is null return false:
-            if ((object)p == null)
+            if (coordinate == null)
             {
                 return false;
             }
 
             // Return true if the fields match:
-            return (x == p.x) && (y == p.y);
+            return (this.X == coordinate.X) && (this.Y == coordinate.Y);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
-            return x ^ y;
+            return this.X ^ this.Y;
         }
     }
 }

@@ -8,7 +8,7 @@ The maze solver will default to http://localhost:8080/solvemaze
 
 You may also run the unit tests.
 
-Be sure to rebuild the solution or run ```Update-Package`` to restore nuget packages. 
+Be sure to rebuild the solution or run ```Update-Package``` to restore nuget packages. 
 
 ### Prerequisites
 

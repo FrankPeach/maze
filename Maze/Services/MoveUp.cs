@@ -33,7 +33,7 @@ namespace Maze.Services
                     };
                 }
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException)
             {
                 // We got outside the bounds of the array
                 return null;

@@ -22,7 +22,7 @@ namespace Maze.Controllers
         /// <summary>
         /// The service.
         /// </summary>
-        private ISolveMazeService service;
+        private readonly ISolveMazeService service;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SolveMazeController"/> class.

@@ -108,8 +108,8 @@ namespace Maze.Services
                 var startIndex = mazeLine.IndexOf(MazeCharacters.Starting);
                 if (startIndex > 0)
                 {
-                    coordinates.Y = startIndex;
-                    coordinates.X = lineIndex;
+                    coordinates.Y = lineIndex;
+                    coordinates.X = startIndex;
                     found = true;
                 }
 

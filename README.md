@@ -49,7 +49,8 @@ curl -X POST \
 ```
 
 ## Results
-The result will the maze sent with the POST request with '@' symbols for the solution as well as the number of steps it took to solve.
+The result will be the maze sent in with the POST request with '@' symbols for the solution path as well as the number of steps it took to solve.
+
 The consumer should be sure to format the returned solution using the line feeds ```\r\n```
 
 ## Example Result

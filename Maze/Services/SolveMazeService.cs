@@ -11,7 +11,6 @@ namespace Maze.Services
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -25,6 +24,7 @@ namespace Maze.Services
     /// </summary>
     public class SolveMazeService : ISolveMazeService
     {
+        /// TODO Either Inject this or use factory pattern for initialization
         /// <summary>
         /// The move directions.
         /// </summary>
@@ -40,8 +40,8 @@ namespace Maze.Services
         /// </exception>
         public Task<MazeSolution> SolveMazeAsync(string maze)
         {
-            var mazeArray = SolveMazeService.BuildMazeArray(maze);
-            var start = SolveMazeService.FindStart(mazeArray);
+            string[] mazeArray = SolveMazeService.BuildMazeArray(maze);
+            Coordinate start = SolveMazeService.FindStart(mazeArray);
 
             // TODO create better exception handling and return bad request 
             if (start == null)
@@ -69,9 +69,9 @@ namespace Maze.Services
         {
             var mazeList = new List<string>();
 
-            var mazeItem = string.Empty;
-            var mazeArray = maze.ToCharArray();
-            foreach (var s in mazeArray)
+            string mazeItem = string.Empty;
+            char[] mazeArray = maze.ToCharArray();
+            foreach (char s in mazeArray)
             {
                 if (MazeCharacters.CharacterList.Contains(s))
                 {
@@ -100,16 +100,16 @@ namespace Maze.Services
         /// <returns>The <see cref="Coordinate"/>.</returns>
         private static Coordinate FindStart(string[] mazeLines)
         {
-            int lineIndex = 0;
-            bool found = false;
-            Coordinate coordinates = new Coordinate();
-            foreach (var mazeLine in mazeLines)
+            var lineIndex = 0;
+            var found = false;
+            var coordinates = new Coordinate();
+            foreach (string mazeLine in mazeLines)
             {
-                var startIndex = mazeLine.IndexOf(MazeCharacters.Starting);
-                if (startIndex > 0)
+                int columnIndex = mazeLine.IndexOf(MazeCharacters.Starting);
+                if (columnIndex > 0)
                 {
                     coordinates.Y = lineIndex;
-                    coordinates.X = startIndex;
+                    coordinates.X = columnIndex;
                     found = true;
                 }
 
@@ -129,26 +129,19 @@ namespace Maze.Services
             return null;
         }
 
-        /// <summary>
-        /// Replace the maze with the solution characters
-        /// </summary>
-        /// <param name="maze">
-        /// The maze array
-        /// </param>
+        /// <summary>Replace the maze with the solution characters</summary>
+        /// <param name="maze">The maze array</param>
         /// <param name="solution">The coordinate solution.</param>
         /// <param name="solutionChar">The solution char.</param>
         /// <returns>The <see cref="T:string[]"/>. </returns>
-        private static string[] ReplaceSolutionChars(
-            string[] maze,
-            LinkedList<Coordinate> solution,
-            char solutionChar = '@')
+        private static string[] ReplaceSolutionChars(string[] maze, LinkedList<Coordinate> solution, char solutionChar = '@')
         {
-            string[] solutionString = new string[maze.Length];
+            var solutionString = new string[maze.Length];
 
-            for (int i = 0; i < maze.Length; i++)
+            for (var i = 0; i < maze.Length; i++)
             {
                 char[] line = maze[i].ToCharArray();
-                foreach (var coordinate in solution.Where(x => x.Y == i))
+                foreach (Coordinate coordinate in solution.Where(x => x.Y == i))
                 {
                     line[coordinate.X] = solutionChar;
                 }
@@ -165,24 +158,21 @@ namespace Maze.Services
         /// <returns>The list of coordinates that solves the puzzle<see cref="List{Coordiante}"/>.</returns>
         private LinkedList<Coordinate> Solve(string[] maze, Coordinate start)
         {
-            var paths = new Paths();
+            List<Path> newPathList;
 
-            paths.PathList.Add(new Path(start));
-            var newPathList = paths;
-            var starttime = DateTime.Now;
-
-            var distinctcoordinates = new List<Coordinate>();
+            var originalPathList = new List<Path> { new Path(start) };
+            var distinctCoordinates = new List<Coordinate>();
 
             do
             {
-                paths = new Paths();
-                foreach (var path in newPathList.PathList)
+                newPathList = new List<Path>();
+                foreach (Path path in originalPathList)
                 {
                     var pathEndPoint = new Coordinate { X = path.End.X, Y = path.End.Y };
                     var newCoordinates = new List<Coordinate>();
-                    foreach (var moveDirection in this.MoveDirections)
+                    foreach (IMoveDirection moveDirection in this.MoveDirections)
                     {
-                        var result = moveDirection.Move(maze, pathEndPoint);
+                        Coordinate result = moveDirection.Move(maze, pathEndPoint);
 
                         // If the result is not null then we can move there
                         if (result != null)
@@ -196,49 +186,36 @@ namespace Maze.Services
                             }
 
                             // Check if we have come across this point already on another path
-                            if (!distinctcoordinates.Any(x => x.Equals(result)))
+                            if (!distinctCoordinates.Any(x => x.Equals(result)))
                             {
-                                Debug.WriteLine("after" + starttime.Subtract(DateTime.Now).Milliseconds);
                                 newCoordinates.Add(result);
-                                distinctcoordinates.Add(result);
+                                distinctCoordinates.Add(result);
                             }
                         }
                     }
 
-                    // A little klugey here but a way to keep from cloning any more than absolutely needed
-                    // this is an area ripe for refactoring
                     if (newCoordinates.Any())
                     {
-                        Path[] newPaths = new Path[newCoordinates.Count - 1];
+                        var newPaths = new Path[newCoordinates.Count - 1];
 
-                        for (int i = 0; i < newCoordinates.Count; i++)
+                        // Add new paths for every new coordinate after the 1st
+                        for (var i = 1; i < newCoordinates.Count; i++)
                         {
-                            if (i > 0)
-                            {
-                                var list = path.Coordinates.Clone();
-                                newPaths[i - 1] = new Path(list);
-                            }
+                            LinkedList<Coordinate> list = path.Coordinates.Clone();
+                            newPaths[i - 1] = new Path(list);
+                            newPaths[i - 1].Coordinates.AddLast(newCoordinates[i]);
+                            newPathList.Add(newPaths[i - 1]);
                         }
-
-                        for (int i = 0; i < newCoordinates.Count; i++)
-                        {
-                            if (i == 0)
-                            {
-                                path.Coordinates.AddLast(newCoordinates[i]);
-                                paths.PathList.Add(path);
-                            }
-                            else
-                            {
-                                newPaths[i - 1].Coordinates.AddLast(newCoordinates[i]);
-                                paths.PathList.Add(newPaths[i - 1]);
-                            }
-                        }
+                        
+                        // add the 1st coordinate to the original path
+                        path.Coordinates.AddLast(newCoordinates[0]);
+                        newPathList.Add(path);
                     }
                 }
 
-                newPathList = paths;
+                originalPathList = newPathList;
             }
-            while (paths.PathList.Count > 0);
+            while (newPathList.Count > 0);
 
             return null;
         }
